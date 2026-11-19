@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<style>
+  body { font-family: -apple-system, "Helvetica Neue", sans-serif; color: #1d1d1f; margin: 0; padding: 4px 8px; font-size: 13px; line-height: 1.45; }
+  h2 { font-size: 20px; margin: 0 0 10px; letter-spacing: -0.3px; }
+  p { margin: 0 0 9px; }
+  ol { margin: 6px 0 10px 18px; padding: 0; }
+  li { margin: 4px 0; }
+  .note { background: #f2f2f7; border-radius: 8px; padding: 10px 12px; margin-top: 12px; }
+  .warn { color: #9a5b00; font-weight: 600; }
+  code { font-family: "SF Mono", Menlo, monospace; font-size: 12px; background: #f2f2f7; padding: 1px 4px; border-radius: 4px; }
+</style>
+</head>
+<body>
+<h2>Installation complete</h2>
+<p class="warn">Restart your Mac now.</p>
+<ol>
+  <li>After restarting, open <b>Mobile Partner</b> from Applications.</li>
+  <li>Enter the APN supplied by your mobile carrier (for example <code>internet</code>).</li>
+  <li>Press <b>Connect</b>.</li>
+</ol>
+<p>While connected, the E1550 provides the Mac’s internet connection. Disconnect from the app when you are done.</p>
+<div class="note">
+  <p>If the app still says <b>Driver inactive</b> after the restart, use <b>Diagnostics</b> in the app and check:</p>
+  <p><code>/var/log/mobilepartner.log</code> — helper log<br>
+     <code>/var/log/mobilepartner-install.log</code> — installer log</p>
+  <p>The original Mobile Partner app is not used and can be discarded.</p>
+</div>
+</body>
+</html>

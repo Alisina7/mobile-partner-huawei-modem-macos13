@@ -1,0 +1,67 @@
+#!/bin/bash
+set -u
+LOG=/var/log/mobilepartner-install.log
+exec >>"$LOG" 2>&1
+echo ""
+echo "=== Mobile Partner install: $(date) ==="
+
+KEXT="/Library/Extensions/HuaweiDataCardDriver_10_9.kext"
+APP="/Applications/Mobile Partner.app"
+HELPER="/usr/local/mobilepartner/mphelper"
+ACTIVATOR="/usr/local/mobilepartner/MBBActivateApp"
+MODEM_SCRIPT="/Library/Modem Scripts/HUAWEI Mobile Connect - 3G Modem"
+DAEMON="/Library/LaunchDaemons/com.mobilepartner.helper.plist"
+
+if [ -d "$KEXT" ]; then
+    chown -R root:wheel "$KEXT"
+    chmod -R u+rwX,go+rX,go-w "$KEXT"
+    echo "Driver permissions repaired."
+fi
+
+if [ -d "$APP" ]; then
+    chown -R root:wheel "$APP"
+    chmod -R u+rwX,go+rX,go-w "$APP"
+    echo "App permissions repaired."
+fi
+
+mkdir -p /usr/local/mobilepartner
+chown root:wheel /usr/local/mobilepartner
+chmod 755 /usr/local/mobilepartner
+
+if [ -f "$HELPER" ]; then
+    chown root:wheel "$HELPER"
+    chmod 755 "$HELPER"
+fi
+if [ -f "$ACTIVATOR" ]; then
+    chown root:wheel "$ACTIVATOR"
+    chmod 755 "$ACTIVATOR"
+fi
+if [ -f "$MODEM_SCRIPT" ]; then
+    chown root:wheel "$MODEM_SCRIPT"
+    chmod 644 "$MODEM_SCRIPT"
+fi
+if [ -f "$DAEMON" ]; then
+    chown root:wheel "$DAEMON"
+    chmod 644 "$DAEMON"
+fi
+
+# Make sure the helper is running now. It does not need the modem driver.
+launchctl bootout system/com.mobilepartner.helper 2>/dev/null || true
+launchctl enable system/com.mobilepartner.helper 2>/dev/null || true
+launchctl bootstrap system "$DAEMON" 2>/dev/null || true
+launchctl kickstart -k system/com.mobilepartner.helper 2>/dev/null || true
+
+# Stage the kernel extension. On macOS 13 a freshly staged kext only becomes
+# active after a reboot, so a failure here is expected on the first install.
+if [ -d "$KEXT" ]; then
+    echo "Loading Huawei driver..."
+    /usr/bin/kmutil load --no-authorization --bundle-path "$KEXT" || true
+fi
+
+if [ -f /var/log/mobilepartner.log ]; then
+    chown root:wheel /var/log/mobilepartner.log
+    chmod 644 /var/log/mobilepartner.log
+fi
+
+echo "=== Install finished ==="
+exit 0

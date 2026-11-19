@@ -1,0 +1,30 @@
+# Build output
+build/
+/DerivedData/
+
+# macOS
+.DS_Store
+
+# Original 2013 package and extraction (not part of the project)
+Mobile Partner.app/
+inner/
+
+# Local experiments and installer logs
+tools/
+install/
+kextpolicy/
+*.log
+driver_install.log
+kextpolicy_dump.txt
+
+# Unused older driver copy
+payloads/driver/HuaweiDataCardDriver.kext/
+
+# Unused extracted Huawei components (32-bit dashboard, network manager)
+payloads/hwnetmgr/
+payloads/mp/
+payloads/portdetect/
+
+# Early exploration scripts
+inspect_kextpolicy.sh
+install_driver.sh

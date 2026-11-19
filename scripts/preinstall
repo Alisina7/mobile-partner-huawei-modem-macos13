@@ -1,0 +1,8 @@
+#!/bin/bash
+set -u
+
+# Stop the old helper before replacing its files.
+launchctl bootout system/com.mobilepartner.helper 2>/dev/null || true
+rm -f /var/run/mobilepartner.sock
+
+exit 0
